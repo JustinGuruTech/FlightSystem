@@ -6,7 +6,168 @@
         xmlns:local="clr-namespace:FlightSystem"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <!--
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                                -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Label x:Name="FlightName" Content="737" HorizontalAlignment="Left" Margin="170,26,0,0" VerticalAlignment="Top" FontSize="28" FontWeight="Bold"/>
+        <Label Content="Choose Flight:" HorizontalAlignment="Left" Margin="430,24,0,0" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
+        <Label Content="Choose Passenger:" HorizontalAlignment="Left" Margin="384,64,0,0" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
+        <Label Content="Passenger's Seat:" HorizontalAlignment="Left" Margin="400,104,0,0" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
+        <ComboBox x:Name="FlightDropdown" HorizontalAlignment="Left" Margin="592,24,0,0" VerticalAlignment="Top" Width="180" Height="30" FontWeight="Bold" FontSize="14" VerticalContentAlignment="Bottom" SelectionChanged="FlightDropdown_SelectionChanged"/>
+        <ComboBox x:Name="PassengerDropdown" HorizontalAlignment="Left" Margin="592,68,0,0" VerticalAlignment="Top" Width="180" Height="30" FontWeight="Bold" FontSize="14" VerticalContentAlignment="Bottom"/>
+        <TextBox x:Name="PassengerSeat" HorizontalAlignment="Left" Height="30" Margin="592,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" VerticalContentAlignment="Center" FontSize="20"/>
+        <Button x:Name="ChangeSeatBtn" Content="Change Seat" HorizontalAlignment="Left" Margin="592,157,0,0" VerticalAlignment="Top" Width="180" Height="40" FontSize="20" FontWeight="Bold"/>
+        <Button x:Name="DeletePassenger" Content="Delete Passenger" HorizontalAlignment="Left" Margin="592,203,0,0" VerticalAlignment="Top" Width="180" Height="40" FontSize="20" FontWeight="Bold"/>
+        <Button x:Name="AddPassenger" Content="Add Passenger" HorizontalAlignment="Left" Margin="406,203,0,0" VerticalAlignment="Top" Width="180" Height="40" FontSize="20" FontWeight="Bold"/>
+        <GroupBox Header="Color Key" HorizontalAlignment="Left" Height="164" Margin="400,248,0,0" VerticalAlignment="Top" Width="372" FontWeight="Bold" FontSize="16">
+            <StackPanel HorizontalAlignment="Left" Height="138" VerticalAlignment="Top" Width="361" Margin="0,0,-2,-3.5">
+                <StackPanel Height="46" Orientation="Horizontal">
+                    <Rectangle Fill="#FFF35454" Height="40" Stroke="Black" Width="40" HorizontalAlignment="Left" Margin="16,0,20,0"/>
+                    <Label Content="Seat is Taken" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Height="46" Orientation="Horizontal">
+                    <Rectangle Fill="#FF5495F3" Height="40" Stroke="Black" Width="40" HorizontalAlignment="Left" Margin="16,3,20,3"/>
+                    <Label Content="Seat is Available" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,7.25"/>
+                </StackPanel>
+                <StackPanel Height="46" Orientation="Horizontal">
+                    <Rectangle Fill="#FF54F362" Height="40" Stroke="Black" Width="40" HorizontalAlignment="Left" Margin="16,3,20,3"/>
+                    <Label Content="Selected Passenger's Seat" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,7.25"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <StackPanel x:Name="Flight1Stack" HorizontalAlignment="Left" Height="292" Margin="32,78,0,0" VerticalAlignment="Top" Width="330">
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel x:Name="Flight2Stack" HorizontalAlignment="Left" Height="292" Margin="32,78,0,0" VerticalAlignment="Top" Width="330" Visibility="Hidden">
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+            <StackPanel Height="46" Orientation="Horizontal" Margin="0,0,0,5">
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="40,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+                <Button Content="" Width="40" Height="40" Background="#FF5495F3" BorderBrush="Black" FontWeight="Bold" FontSize="20" Foreground="White" BorderThickness="2" Margin="0,3,10,3"/>
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </Window>
