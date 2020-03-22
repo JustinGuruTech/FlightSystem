@@ -13,27 +13,35 @@ namespace FlightSystem {
         public MainWindow() {
             InitializeComponent();
 
-            // variables for calling UI Creation
-            int numFlights = InitialUICreation.GetNumFlights();
-            StackPanel[] FlightStacks = new StackPanel[numFlights];
-            FlightStacks[0] = Flight1Stack;
-            FlightStacks[1] = Flight2Stack;
-
             // calling CreateUI like this with FlightStacks.Length prevents trying to display a UI for a flight in DB but without a UIStack
-            InitialUICreation.CreateUI(FlightDropdown, PassengerDropdown, FlightStacks, FlightStacks.Length);
-
+            InitialUICreation.CreateUI(FlightDropdown, PassengerDropdown, FlightsStack, FlightsStack.Children.Count);
             FlightDropdown.SelectedIndex = 0;
             
         }
 
+        /// <summary>
+        /// Shrinks all flights not selected and expands flight selected. Scalable to more than 2 flights.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FlightDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if ((sender as ComboBox).SelectedIndex == 0) {
-                Flight1Stack.Visibility = Visibility.Visible;
-                Flight2Stack.Visibility = Visibility.Hidden;
-            } else {
-                Flight1Stack.Visibility = Visibility.Hidden;
-                Flight2Stack.Visibility = Visibility.Visible;
+            int flightStackNum = 0;
+            foreach (StackPanel flightStack in FlightsStack.Children) {
+                // selected flight
+                if (flightStackNum++ == (sender as ComboBox).SelectedIndex) {
+                    flightStack.Visibility = Visibility.Visible;
+                    flightStack.Height = 320;
+                } 
+                // not selected flight
+                else {
+                    flightStack.Visibility = Visibility.Hidden;
+                    flightStack.Height = 0;
+                }
             }
+
+            // update title of flight
+            FlightName.Content = FlightDropdown.SelectedValue;
+          
         }
     }
 }

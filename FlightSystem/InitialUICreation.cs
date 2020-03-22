@@ -22,11 +22,11 @@ namespace FlightSystem {
         /// <param name="PassengerDropdown"></param>
         /// <param name="FlightStacks"></param>
         /// <param name="numFlights"></param>
-        public static void CreateUI(ComboBox FlightDropdown, ComboBox PassengerDropdown, StackPanel[] FlightStacks, int numFlights) {
+        public static void CreateUI(ComboBox FlightDropdown, ComboBox PassengerDropdown, StackPanel FlightsStack, int numFlights) {
 
             PopulateFlightDropdown(FlightDropdown, numFlights);
             PopulatePassengerDropdown(PassengerDropdown);
-            PopulateFlightSeats(FlightStacks, numFlights, GetSeatsTaken(numFlights));
+            PopulateFlightSeats(FlightsStack, GetSeatsTaken(numFlights));
 
         }
 
@@ -89,16 +89,19 @@ namespace FlightSystem {
         }
 
         /// <summary>
-        /// Populates flight seats on UI based on whats in the DB
+        /// Populates flight seats on UI based on whats in the DB - Easily scalable to more flights
         /// </summary>
         /// <param name="FlightStacks"></param>
         /// <param name="numFlights"></param>
-        public static void PopulateFlightSeats(StackPanel[] FlightStacks, int numFlights, int[][] flightSeatsTaken) {
+        public static void PopulateFlightSeats(StackPanel FlightsStack, int[][] flightSeatsTaken) {
 
-            for (int flightNum = 0; flightNum < numFlights; flightNum++) {
+            int flightNum = 0;
+            // for each flight
+            foreach (StackPanel flightStack in FlightsStack.Children) {
+
                 int seatNum = 1;
-                // for each row in the stackpanel
-                foreach (StackPanel stack in FlightStacks[flightNum].Children) {
+                // for each row in the flight
+                foreach (StackPanel stack in flightStack.Children) {
                     // for each seat button
                     foreach (Button seatButton in stack.Children) {
 
@@ -111,6 +114,8 @@ namespace FlightSystem {
                         seatButton.Content = seatNum++; // assign seat number
                     }
                 }
+
+                flightNum++;
             }
         }
     }
